@@ -1,5 +1,5 @@
 <div align="center">
-<img src="configent.png" alt="configent">
+<img src="https://github.com/roxiness/configent/raw/master/configent.png" alt="configent">
 </div>
 
 # Configent
