@@ -3,7 +3,8 @@
   "version": "1.0.0-0",
   "description": "",
   "main": "index.js",
-  "scripts": {    
+  "scripts": {
+    "build": "documentation readme index.js -f md -s API",
     "test": "cd test && ava"
   },
   "repository": {
@@ -20,7 +21,8 @@
     "dotenv": "^8.2.0"
   },
   "devDependencies": {
-    "ava": "^3.13.0"
+    "ava": "^3.13.0",
+    "documentation": "^13.0.2"
   },
   "ava": {
     "files": [

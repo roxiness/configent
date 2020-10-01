@@ -1,6 +1,7 @@
 const { existsSync } = require('fs')
 const { resolve } = require('path')
 let instances = {}
+
 const _defaults = {
     singleton: true,
     useDotEnv: true,
@@ -11,14 +12,21 @@ const _defaults = {
 }
 
 /**
- * 
- * @param {string} name 
- * @param {Object.<string, *>} defaults 
- * @param {Object.<string, *>=} options
- * @param {Partial<_defaults>=} _options
+ * @template {Object.<string, any>} options
+ * @param {string} name name to use for configs
+ * @param {options} defaults default options 
+ * @param {Partial<options>=} input provided input
+ * @param {object} [configentOptions ] configent options
+ * @param {boolean} [configentOptions.singleton = true] calling configent twice with same parameters will return the same instance
+ * @param {boolean} [configentOptions.useDotEnv = true] include config from .env files
+ * @param {boolean} [configentOptions.useEnv = true] include config from process.env
+ * @param {boolean} [configentOptions.usePackageConfig = true] include config from package.json
+ * @param {boolean} [configentOptions.useConfig = true] include config from [name].config.js
+ * @param {function} [configentOptions.sanitizeEnvValue = str => str.replace(/[-_][a-z]/g, str => str.substr(1).toUpperCase())] sanitize environment values. Convert snake_case to camelCase by default. 
+ * @returns {options}
  */
-function configent(name, defaults, options = {}, _options) {
-    _options = { ..._defaults, ..._options }
+function configent(name, defaults, input = {}, configentOptions) {
+    configentOptions = { ..._defaults, ...configentOptions }
     const {
         singleton,
         useDotEnv,
@@ -26,11 +34,11 @@ function configent(name, defaults, options = {}, _options) {
         useConfig,
         useEnv,
         usePackageConfig
-    } = _options
+    } = configentOptions
 
     const configPath = resolve(process.cwd(), `${name}.config.js`)
     const upperCaseRE = new RegExp(`^${name.toUpperCase()}_`)
-    const hash = JSON.stringify({ name, defaults, options })
+    const hash = JSON.stringify({ name, defaults, options: input })
 
     if (!instances[hash] || !singleton) {
         instances[hash] = {
@@ -38,7 +46,7 @@ function configent(name, defaults, options = {}, _options) {
             ...usePackageConfig && getPackageConfig(),
             ...useConfig && getUserConfig(configPath),
             ...useEnv && getEnvConfig(),
-            ...options
+            ...input
         }
     }
     return instances[hash]
