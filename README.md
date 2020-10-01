@@ -1,4 +1,6 @@
+<div align="center">
 <img src="./configent.png" alt="configent">
+</div>
 
 # Configent
 
