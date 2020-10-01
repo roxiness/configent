@@ -6,18 +6,22 @@
 
 ### Confident configurations
 
-No fuzz config compilation from 
+No fuzz config compilation from (ordered by ascending precedence)
 
+-   defaults
 -   package.json
 -   [name].config.js
 -   .env
 -   environment
 -   input
 
+
+
 ```javascript
 /** 
  * defaults = { name: 'John Doe', city: 'N/A', lastSeen: 'N/A' }
  * package.json {"foobar": {"city": "Portsmouth"}}
+ * foobar.config.js {lastSeen: 'Liverpool'}
  * process.env.foobar_last_seen = London
  * options = { name: 'Sherlock Holmes' }
 */

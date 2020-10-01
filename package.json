@@ -1,19 +1,20 @@
 {
   "name": "configent",
   "version": "1.0.2",
-  "description": "",
+  "description": "Confident configurations",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roxiness/configent.git"
+  },
   "main": "index.js",
   "scripts": {
     "build": "documentation readme index.js -f md -s API",
     "test": "cd test && ava"
   },
-  "repository": {
-    "type": "git",
-    "url": "@roxiness/configent"
-  },
   "keywords": [
     "config",
-    "env"
+    "env",
+    "package.json"
   ],
   "author": "jakobrosenberg@gmail.com",
   "license": "MIT",
