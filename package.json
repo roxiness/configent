@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "documentation readme index.js -f md -s API",
+    "build": "documentation readme index.js -f md -s API && node ./postBuild",
     "test": "cd test && ava"
   },
   "keywords": [
