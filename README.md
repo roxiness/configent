@@ -29,7 +29,7 @@ No fuzz config compilation from (ordered by ascending precedence)
 const config = configent('foobar', defaults, options)
 
 /**
- * console.log(configent)
+ * console.log(config)
  * {
  *   name: 'Sherlock Holmes',
  *   city: 'Portsmouth',
