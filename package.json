@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "documentation readme index.js -f md -s API && node ./postBuild",
+    "build": "tsc && documentation readme index.js -f md -s API && node ./postBuild",
     "test": "cd test && ava"
   },
   "keywords": [
@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "ava": "^3.13.0",
-    "documentation": "^13.0.2"
+    "documentation": "^13.0.2",
+    "typescript": "^4.0.3"
   },
   "ava": {
     "files": [
