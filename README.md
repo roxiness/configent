@@ -15,16 +15,15 @@ No fuzz config compilation from (ordered by ascending precedence)
 -   environment
 -   input
 
-
-
 ```javascript
 /** 
- * defaults = { name: 'John Doe', city: 'N/A', lastSeen: 'N/A' }
  * package.json {"foobar": {"city": "Portsmouth"}}
  * foobar.config.js {lastSeen: 'Liverpool'}
  * process.env.foobar_last_seen = London
  * options = { name: 'Sherlock Holmes' }
 */
+
+const defaults = { name: 'John Doe', city: 'N/A', lastSeen: 'N/A' }
 
 const config = configent('foobar', defaults, options)
 
@@ -38,7 +37,38 @@ const config = configent('foobar', defaults, options)
  * /
 ```
 
-<a href="https://www.freepik.com/vectors/vintage">Vintage vector created by macrovector - www.freepik.com</a>
+### Auto detect defaults
+
+Configent supports multiple default configs. These are added to `./configs`.
+
+```javascript
+/** ./configs/routify2.config.js */
+
+module.exports = {
+    supersedes: ['svelte'],
+    condition: ({ pkgjson }) => pkgjson.dependencies['@roxi/routify'],
+    config: () => ({ 
+        /** the config object used as default */
+        myAppName: 'Routify App' 
+    })
+}
+```
+
+```javascript
+/** ./configs/svelte.config.js */
+
+module.exports = {
+    condition: ({ pkgjson }) => pkgjson.dependencies['svelte'],
+    config: () => ({ 
+        /** the config object used as default */
+        myAppName: 'Svelte App' 
+    })
+}
+```
+
+The first config with a true condition is used. To avoid conflicts, configs using the  `supersedes` option, will run before their superseded targets.
+
+To change the location of default configs, refer to `detectDefaultsConfigPath`.
 
 ### API
 
@@ -53,18 +83,21 @@ const config = configent('foobar', defaults, options)
 
 ##### Parameters
 
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** name to use for configs
 -   `defaults` **options** default options
 -   `input` **Partial&lt;options>?** provided input (optional, default `{}`)
 -   `configentOptions` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** configent options
-    -   `configentOptions.singleton` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice with same parameters will return the same instance (optional, default `true`)
+    -   `configentOptions.name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** name to use for configs. If left empty, name from package.json is used (optional, default `''`)
+    -   `configentOptions.cacheConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice with same parameters will return the same instance (optional, default `true`)
     -   `configentOptions.useDotEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from .env files (optional, default `true`)
     -   `configentOptions.useEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from process.env (optional, default `true`)
     -   `configentOptions.usePackageConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from package.json (optional, default `true`)
     -   `configentOptions.useConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from [name].config.js (optional, default `true`)
+    -   `configentOptions.useDetectDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** detect defaults from context (package.json and file stucture) (optional, default `true`)
+    -   `configentOptions.detectDefaultsConfigPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** detect defaults from context (package.json and file stucture) (optional, default `'configs'`)
     -   `configentOptions.sanitizeEnvValue` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** sanitize environment values. Convert snake_case to camelCase by default. (optional, default `str=>str.replace(/[-_][a-z]/g,str=>str.substr(1).toUpperCase())`)
 
 Returns **options** 
+
 
 ---
 

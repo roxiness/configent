@@ -18,16 +18,16 @@ const _defaults = {
  * @template {Object.<string, any>} options
  * @param {options} defaults default options 
  * @param {Partial<options>=} input provided input
- * @param {object} [configentOptions ] configent options
- * @param {string} [configentOptions.name = ''] name to use for configs. If left empty, name from package.json is used
- * @param {boolean} [configentOptions.cacheConfig = true] calling configent twice with same parameters will return the same instance
- * @param {boolean} [configentOptions.useDotEnv = true] include config from .env files
- * @param {boolean} [configentOptions.useEnv = true] include config from process.env
- * @param {boolean} [configentOptions.usePackageConfig = true] include config from package.json
- * @param {boolean} [configentOptions.useConfig = true] include config from [name].config.js
- * @param {boolean} [configentOptions.useDetectDefaults = true] detect defaults from context (package.json and file stucture)
- * @param {string} [configentOptions.detectDefaultsConfigPath = 'configs'] detect defaults from context (package.json and file stucture)
- * @param {function} [configentOptions.sanitizeEnvValue = str => str.replace(/[-_][a-z]/g, str => str.substr(1).toUpperCase())] sanitize environment values. Convert snake_case to camelCase by default. 
+ * @param {object} [configentOptions] configent options
+ * @param {string=} [configentOptions.name = ''] name to use for configs. If left empty, name from package.json is used
+ * @param {boolean=} [configentOptions.cacheConfig = true] calling configent twice with same parameters will return the same instance
+ * @param {boolean=} [configentOptions.useDotEnv = true] include config from .env files
+ * @param {boolean=} [configentOptions.useEnv = true] include config from process.env
+ * @param {boolean=} [configentOptions.usePackageConfig = true] include config from package.json
+ * @param {boolean=} [configentOptions.useConfig = true] include config from [name].config.js
+ * @param {boolean=} [configentOptions.useDetectDefaults = true] detect defaults from context (package.json and file stucture)
+ * @param {string=} [configentOptions.detectDefaultsConfigPath = 'configs'] detect defaults from context (package.json and file stucture)
+ * @param {function=} [configentOptions.sanitizeEnvValue = str => str.replace(/[-_][a-z]/g, str => str.substr(1).toUpperCase())] sanitize environment values. Convert snake_case to camelCase by default. 
  * @returns {options}
  */
 function configent(defaults, input = {}, configentOptions) {
@@ -99,10 +99,10 @@ function configent(defaults, input = {}, configentOptions) {
 
         Object.assign(pkgjson.dependencies, pkgjson.devDependencies)
 
-        const unsortedConfigTemplates = readdirSync(resolve(module.parent.path, detectDefaultsConfigPath))
+        const unsortedConfigTemplates = readdirSync(resolve(module['parent'].path, detectDefaultsConfigPath))
             .map(file => ({
                 file,
-                ...require(resolve(module.parent.path, detectDefaultsConfigPath, file))
+                ...require(resolve(module['parent'].path, detectDefaultsConfigPath, file))
             }))
         const configTemplates = sortBySupersedings(unsortedConfigTemplates)
         const configTemplate = configTemplates.find(configTemplate => configTemplate.condition({ pkgjson }))
@@ -139,6 +139,6 @@ function sortBySupersedings(arr) {
 }
 
 function getNameFromPkgJson() {
-    const pkgJson = require(resolve(module.parent.path, 'package.json'))
+    const pkgJson = require(resolve(module['parent'].path, 'package.json'))
     return pkgJson.name
 }
