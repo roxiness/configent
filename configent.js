@@ -1,4 +1,4 @@
-const { existsSync, readdirSync } = require('fs-extra')
+const { existsSync, readdirSync } = require('fs')
 const { resolve } = require('path')
 let instances = {}
 
@@ -139,6 +139,10 @@ function sortBySupersedings(arr) {
 }
 
 function getNameFromPkgJson() {
-    const pkgJson = require(resolve(module['parent'].path, 'package.json'))
-    return pkgJson.name
+    let m = module
+    // walk through parents till we find a package.json
+    while (m = m['parent']) {
+        const pkgJsonPath = resolve(m.path, 'package.json')
+        if (existsSync(pkgJsonPath)) return require(pkgJsonPath).name
+    }
 }
