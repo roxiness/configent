@@ -1,10 +1,12 @@
 const { existsSync, readdirSync } = require('fs')
 const { resolve } = require('path')
 let instances = {}
+let detectedFromDefaults = {}
 
 const _defaults = {
     name: '',
     cacheConfig: true,
+    cacheDetectedDefaults: true,
     useDotEnv: true,
     useEnv: true,
     usePackageConfig: true,
@@ -21,6 +23,7 @@ const _defaults = {
  * @param {object} [configentOptions] configent options
  * @param {string=} [configentOptions.name = ''] name to use for configs. If left empty, name from package.json is used
  * @param {boolean=} [configentOptions.cacheConfig = true] calling configent twice with same parameters will return the same instance
+ * @param {boolean=} [configentOptions.cacheDetectedDefaults = true] calling configent twice from the same module will return the same defaults
  * @param {boolean=} [configentOptions.useDotEnv = true] include config from .env files
  * @param {boolean=} [configentOptions.useEnv = true] include config from process.env
  * @param {boolean=} [configentOptions.usePackageConfig = true] include config from package.json
@@ -36,6 +39,7 @@ function configent(defaults, input = {}, configentOptions) {
     const {
         name,
         cacheConfig,
+        cacheDetectedDefaults,
         useDotEnv,
         sanitizeEnvValue,
         useConfig,
@@ -92,24 +96,30 @@ function configent(defaults, input = {}, configentOptions) {
     }
 
     function getDetectDefaults() {
-        const pkgjson = { dependencies: {}, devDependencies: {} };
-        if (existsSync('package.json')) {
-            Object.assign(pkgjson, require(resolve(process.cwd(), 'package.json')));
-        }
-
-        Object.assign(pkgjson.dependencies, pkgjson.devDependencies)
-
-        const unsortedConfigTemplates = readdirSync(resolve(module['parent'].path, detectDefaultsConfigPath))
+        const hash = JSON.stringify({ name, path: module['parent'].path })
+        
+        // we only want to detect the defaults for any given module once
+        if(!detectedFromDefaults[hash] || !cacheDetectedDefaults){
+            const pkgjson = { dependencies: {}, devDependencies: {} };
+            if (existsSync('package.json')) {
+                Object.assign(pkgjson, require(resolve(process.cwd(), 'package.json')));
+            }
+            
+            Object.assign(pkgjson.dependencies, pkgjson.devDependencies)
+            
+            const unsortedConfigTemplates = readdirSync(resolve(module['parent'].path, detectDefaultsConfigPath))
             .map(file => ({
                 file,
                 ...require(resolve(module['parent'].path, detectDefaultsConfigPath, file))
             }))
-        const configTemplates = sortBySupersedings(unsortedConfigTemplates)
-        const configTemplate = configTemplates.find(configTemplate => configTemplate.condition({ pkgjson }))
-        if (configTemplate) {
-            console.log(`${name} found config for ${configTemplate.name}`)
-            return configTemplate.config()
+            const configTemplates = sortBySupersedings(unsortedConfigTemplates)
+            const configTemplate = configTemplates.find(configTemplate => configTemplate.condition({ pkgjson }))
+            if (configTemplate) {
+                console.log(`${name} found config for ${configTemplate.name}`)
+                detectedFromDefaults[hash] = configTemplate.config()
+            }
         }
+        return detectedFromDefaults[hash]
     }
 }
 
