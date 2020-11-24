@@ -53,7 +53,7 @@ function configent(defaults, input = {}, configentOptions) {
     return buildConfig()
 
     function buildConfig() {
-        const hash = JSON.stringify({ defaults, input, configentOptions })
+        const hash = JSON.stringify({ name, defaults, input, configentOptions })
         if (!instances[hash] || !cacheConfig) {
             instances[hash] = {
                 ...defaults,
