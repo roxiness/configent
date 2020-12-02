@@ -1,5 +1,5 @@
 const { existsSync, readdirSync } = require('fs')
-const { resolve } = require('path')
+const { resolve, dirname } = require('path')
 let instances = {}
 let detectedFromDefaults = {}
 
@@ -35,7 +35,8 @@ const _defaults = {
  */
 function configent(defaults, input = {}, configentOptions) {
     configentOptions = { ..._defaults, ...configentOptions }
-    configentOptions.name = configentOptions.name || getNameFromPkgJson()
+    const parentModuleDir = getParentModuleDir()
+    configentOptions.name = configentOptions.name || require(resolve(parentModuleDir, 'package.json')).name
     const {
         name,
         cacheConfig,
@@ -99,7 +100,7 @@ function configent(defaults, input = {}, configentOptions) {
         const hash = JSON.stringify({ name, path: module['parent'].path })
         
         // we only want to detect the defaults for any given module once
-        if(!detectedFromDefaults[hash] || !cacheDetectedDefaults){
+        if (!detectedFromDefaults[hash] || !cacheDetectedDefaults) {
             const pkgjson = { dependencies: {}, devDependencies: {} };
             if (existsSync('package.json')) {
                 Object.assign(pkgjson, require(resolve(process.cwd(), 'package.json')));
@@ -107,16 +108,16 @@ function configent(defaults, input = {}, configentOptions) {
             
             Object.assign(pkgjson.dependencies, pkgjson.devDependencies)
             
-            const unsortedConfigTemplates = readdirSync(resolve(module['parent'].path, detectDefaultsConfigPath))
+            const unsortedConfigTemplates = readdirSync(resolve(parentModuleDir, detectDefaultsConfigPath))
             .map(file => ({
                 file,
-                ...require(resolve(module['parent'].path, detectDefaultsConfigPath, file))
+                ...require(resolve(parentModuleDir, detectDefaultsConfigPath, file))
             }))
             const configTemplates = sortBySupersedings(unsortedConfigTemplates)
             const configTemplate = configTemplates.find(configTemplate => configTemplate.condition({ pkgjson }))
             if (configTemplate) {
                 console.log(`${name} found config for ${configTemplate.name}`)
-                detectedFromDefaults[hash] = configTemplate.config()
+                detectedFromDefaults[hash] = configTemplate.config({ pkgjson })
             }
         }
         return detectedFromDefaults[hash]
@@ -148,11 +149,9 @@ function sortBySupersedings(arr) {
     return sorted
 }
 
-function getNameFromPkgJson() {
-    let m = module
+function getParentModuleDir(path = module['parent'].path) {
     // walk through parents till we find a package.json
-    while (m = m['parent']) {
-        const pkgJsonPath = resolve(m.path, 'package.json')
-        if (existsSync(pkgJsonPath)) return require(pkgJsonPath).name
-    }
+    return (existsSync(resolve(path, 'package.json')))
+        ? path
+        : getParentModuleDir(dirname(path))
 }
