@@ -98,25 +98,26 @@ function configent(defaults, input = {}, configentOptions) {
 
     function getDetectDefaults() {
         const hash = JSON.stringify({ name, path: module['parent'].path })
-        
+
         // we only want to detect the defaults for any given module once
         if (!detectedFromDefaults[hash] || !cacheDetectedDefaults) {
             const pkgjson = { dependencies: {}, devDependencies: {} };
             if (existsSync('package.json')) {
                 Object.assign(pkgjson, require(resolve(process.cwd(), 'package.json')));
             }
-            
+
             Object.assign(pkgjson.dependencies, pkgjson.devDependencies)
-            
+
             const unsortedConfigTemplates = readdirSync(resolve(parentModuleDir, detectDefaultsConfigPath))
-            .map(file => ({
-                file,
-                ...require(resolve(parentModuleDir, detectDefaultsConfigPath, file))
-            }))
+                .map(file => ({
+                    file,
+                    ...require(resolve(parentModuleDir, detectDefaultsConfigPath, file))
+                }))
             const configTemplates = sortBySupersedings(unsortedConfigTemplates)
             const configTemplate = configTemplates.find(configTemplate => configTemplate.condition({ pkgjson }))
             if (configTemplate) {
-                console.log(`${name} found config for ${configTemplate.name}`)
+                if (configTemplate.file !== 'default.config.js')
+                    console.log(`${name} found config for ${configTemplate.name}`)
                 detectedFromDefaults[hash] = configTemplate.config({ pkgjson })
             }
         }
