@@ -31,12 +31,14 @@ const _defaults = {
  * @param {boolean=} [configentOptions.useDetectDefaults = true] detect defaults from context (package.json and file stucture)
  * @param {string=} [configentOptions.detectDefaultsConfigPath = 'configs'] detect defaults from context (package.json and file stucture)
  * @param {function=} [configentOptions.sanitizeEnvValue = str => str.replace(/[-_][a-z]/g, str => str.substr(1).toUpperCase())] sanitize environment values. Convert snake_case to camelCase by default. 
+ * @param {NodeModule} [configentOptions.module] required if multiple modules are using configent
  * @returns {options}
  */
 function configent(defaults, input = {}, configentOptions) {
     configentOptions = { ..._defaults, ...configentOptions }
-    const parentModuleDir = getParentModuleDir()
-    configentOptions.name = configentOptions.name || require(resolve(parentModuleDir, 'package.json')).name
+    const getParentModuleDir = createGetParentModuleDir(configentOptions)
+    configentOptions.name = configentOptions.name || require(resolve(getParentModuleDir(), 'package.json')).name
+
     const {
         name,
         cacheConfig,
@@ -54,6 +56,7 @@ function configent(defaults, input = {}, configentOptions) {
     return buildConfig()
 
     function buildConfig() {
+        delete (configentOptions.module)
         const hash = JSON.stringify({ name, defaults, input, configentOptions })
         if (!instances[hash] || !cacheConfig) {
             instances[hash] = {
@@ -108,10 +111,10 @@ function configent(defaults, input = {}, configentOptions) {
 
             Object.assign(pkgjson.dependencies, pkgjson.devDependencies)
 
-            const unsortedConfigTemplates = readdirSync(resolve(parentModuleDir, detectDefaultsConfigPath))
+            const unsortedConfigTemplates = readdirSync(resolve(getParentModuleDir(), detectDefaultsConfigPath))
                 .map(file => ({
                     file,
-                    ...require(resolve(parentModuleDir, detectDefaultsConfigPath, file))
+                    ...require(resolve(getParentModuleDir(), detectDefaultsConfigPath, file))
                 }))
             const configTemplates = sortBySupersedings(unsortedConfigTemplates)
             const configTemplate = configTemplates.find(configTemplate => configTemplate.condition({ pkgjson }))
@@ -150,11 +153,33 @@ function sortBySupersedings(arr) {
     return sorted
 }
 
+function createGetParentModuleDir(options) {
+    let parentModuleDir
+    return () => {
+        parentModuleDir = parentModuleDir || _getParentModuleDir(options.module && options.module.path)
+        return parentModuleDir
+    }
+}
+
 // walk through parents till we find a package.json
-function getParentModuleDir(path) {
-    path = path || Object.values(require.cache)
-        .find((m) => m.children.includes(module)).path
-        
+function _getParentModuleDir(path) {
+    if (!path) {
+        const modules = Object.values(require.cache)
+            .filter((m) => m.children.includes(module))
+        if (modules.length >= 2) missingModuleError(modules)
+        else path = modules[0].path
+    }
+
     return (existsSync(resolve(path, 'package.json'))) ?
-        path : getParentModuleDir(dirname(path))
+        path : _getParentModuleDir(dirname(path))
+}
+
+function missingModuleError(modules) {
+    const paths = modules.map(m => _getParentModuleDir(m.path))
+    throw new Error([
+        `if multiple packages are using configent, they all need to provide the module.`,
+        `Packages using configent: `,
+        ...paths.map(p => '- ' + p),
+        `Updating the packages may fix the problem.`, ''
+    ].join('\n'))
 }
