@@ -150,9 +150,11 @@ function sortBySupersedings(arr) {
     return sorted
 }
 
-function getParentModuleDir(path = module['parent'].path) {
-    // walk through parents till we find a package.json
-    return (existsSync(resolve(path, 'package.json')))
-        ? path
-        : getParentModuleDir(dirname(path))
+// walk through parents till we find a package.json
+function getParentModuleDir(path) {
+    path = path || Object.values(require.cache)
+        .find((m) => m.children.includes(module)).path
+        
+    return (existsSync(resolve(path, 'package.json'))) ?
+        path : getParentModuleDir(dirname(path))
 }
