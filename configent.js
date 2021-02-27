@@ -165,6 +165,7 @@ function createGetParentModuleDir(options) {
 function _getParentModuleDir(path) {
     if (!path) {
         const modules = Object.values(require.cache)
+            /** @ts-ignore */
             .filter((m) => m.children.includes(module))
         if (modules.length >= 2) missingModuleError(modules)
         else path = modules[0].path
