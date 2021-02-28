@@ -154,9 +154,10 @@ function sortBySupersedings(arr) {
 }
 
 function createGetParentModuleDir(options) {
+    const { module } = options
     let parentModuleDir
     return () => {
-        parentModuleDir = parentModuleDir || _getParentModuleDir(options.module && options.module.path)
+        parentModuleDir = parentModuleDir || _getParentModuleDir(module && module.path)
         return parentModuleDir
     }
 }
