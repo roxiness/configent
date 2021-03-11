@@ -117,11 +117,12 @@ function configent(defaults, input = {}, configentOptions) {
                     ...require(resolve(getParentModuleDir(), detectDefaultsConfigPath, file))
                 }))
             const configTemplates = sortBySupersedings(unsortedConfigTemplates)
-            const configTemplate = configTemplates.find(configTemplate => configTemplate.condition({ pkgjson }))
-            if (configTemplate) {
-                if (configTemplate.file !== 'default.config.js')
-                    console.log(`${name} found config for ${configTemplate.name}`)
-                detectedFromDefaults[hash] = configTemplate.config({ pkgjson })
+                .filter(configTemplate => configTemplate.condition({ pkgjson }))
+                .reverse()
+            if (configTemplates) {
+                if (configTemplates.length > 1) // we don't care about the default template
+                console.log(`[%s] detected defaults from %s`, name, configTemplates.filter(template => template.file !== 'default.config.js').map(template => template.name).join(', '))
+                detectedFromDefaults[hash] = Object.assign({}, ...configTemplates.map(template => template.config({ pkgjson })))
             }
         }
         return detectedFromDefaults[hash]
