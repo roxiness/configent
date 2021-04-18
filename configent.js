@@ -112,12 +112,18 @@ function configent(defaults, input = {}, configentOptions) {
             Object.assign(pkgjson.dependencies, pkgjson.devDependencies)
 
             const unsortedConfigTemplates = readdirSync(resolve(getParentModuleDir(), detectDefaultsConfigPath))
-                .map(file => ({
-                    file,
-                    ...require(resolve(getParentModuleDir(), detectDefaultsConfigPath, file))
-                }))
+                .map(file => {
+                    try {
+                        return {file, ...require(resolve(getParentModuleDir(), detectDefaultsConfigPath, file))}
+                    } catch (err) {
+                    }
+                })
+                .filter(template => {
+                    return template?.file?.indexOf('.config.js') > 0
+                        && template.condition && template.condition({ pkgjson })
+                })
+
             const configTemplates = sortBySupersedings(unsortedConfigTemplates)
-                .filter(configTemplate => configTemplate.condition({ pkgjson }))
                 .reverse()
             if (configTemplates) {
                 if (configTemplates.length > 1) // we don't care about the default template
