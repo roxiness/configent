@@ -34,7 +34,7 @@ const _defaults = {
  * @param {NodeModule} [configentOptions.module] required if multiple modules are using configent
  * @returns {options}
  */
-function configent(defaults, input = {}, configentOptions) {
+function configent(configentOptions) {
     configentOptions = { ..._defaults, ...configentOptions }
     const getParentModuleDir = createGetParentModuleDir(configentOptions)
     configentOptions.name = configentOptions.name || require(resolve(getParentModuleDir(), 'package.json')).name
@@ -57,15 +57,13 @@ function configent(defaults, input = {}, configentOptions) {
 
     function buildConfig() {
         delete (configentOptions.module)
-        const hash = JSON.stringify({ name, defaults, input, configentOptions })
+        const hash = JSON.stringify({ name, configentOptions })
         if (!instances[hash] || !cacheConfig) {
             instances[hash] = {
-                ...defaults,
                 ...useDetectDefaults && getDetectDefaults(),
                 ...usePackageConfig && getPackageConfig(),
                 ...useConfig && getUserConfig(),
                 ...useEnv && getEnvConfig(),
-                ...input
             }
         }
         return instances[hash]
@@ -81,10 +79,8 @@ function configent(defaults, input = {}, configentOptions) {
             return entries.reduce((prev, { key, value }) => ({ ...prev, [key]: value }), {})
 
         function parseField([key, value]) {
-            const shouldParseValue = k => typeof defaults[k] === 'object'
-
             key = sanitizeEnvValue(key.replace(upperCaseRE, ''))
-            value = shouldParseValue(key) ? JSON.parse(value) : value
+            try { value = JSON.parse(value) } catch { }
             return { key, value }
         }
     }
@@ -121,7 +117,7 @@ function configent(defaults, input = {}, configentOptions) {
                 .reverse()
             if (configTemplates) {
                 if (configTemplates.length > 1) // we don't care about the default template
-                console.log(`[%s] detected defaults from %s`, name, configTemplates.filter(template => template.file !== 'default.config.js').map(template => template.name).join(', '))
+                    console.log(`[%s] detected defaults from %s`, name, configTemplates.filter(template => template.file !== 'default.config.js').map(template => template.name).join(', '))
                 detectedFromDefaults[hash] = Object.assign({}, ...configTemplates.map(template => template.config({ pkgjson })))
             }
         }
