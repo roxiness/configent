@@ -1,8 +1,6 @@
 declare module "configent" {
     /**
      * @template {Object.<string, any>} options
-     * @param {options} defaults default options
-     * @param {Partial<options>=} input provided input
      * @param {object} [configentOptions] configent options
      * @param {string=} [configentOptions.name = ''] name to use for configs. If left empty, name from package.json is used
      * @param {boolean=} [configentOptions.cacheConfig = true] calling configent twice with same parameters will return the same instance
@@ -19,7 +17,7 @@ declare module "configent" {
      */
     export function configent<options extends {
         [x: string]: any;
-    }>(defaults: options, input?: Partial<options>, configentOptions?: {
+    }>(configentOptions?: {
         name?: string | undefined;
         cacheConfig?: boolean | undefined;
         cacheDetectedDefaults?: boolean | undefined;

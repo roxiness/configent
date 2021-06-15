@@ -6,33 +6,53 @@
 
 ### Confident configurations
 
-No fuzz config compilation from (ordered by ascending precedence)
+Configent lets you configure your package from the consuming project.
 
--   defaults
--   package.json
--   [name].config.js
--   .env
--   environment
--   input
+It looks for configs in the following places:
+
+*   package.json
+*   \[name].config.js
+*   .env
+*   environment
+
+**Using package.json**
+
+```json
+{
+  "my-package": {
+    "name": "Sherlock Holmes",
+    "city": "Portsmouth"
+  }
+}
+```
+
+**Using config.js**
 
 ```javascript
-/** 
- * package.json {"foobar": {"city": "Portsmouth"}}
- * foobar.config.js {lastSeen: 'Liverpool'}
- * process.env.foobar_last_seen = London
- * options = { name: 'Sherlock Holmes' }
-*/
+// my-package.config.js
+module.exports = { lastSeen: 'Liverpool' }
+```
 
-const defaults = { name: 'John Doe', city: 'N/A', lastSeen: 'N/A' }
+**Using .env**
 
-const config = configent('foobar', defaults, options)
+```env
+my-package_last_seen=London
+```
+
+**Getting the config**
+
+```javascript
+
+const config = configent({
+    name: 'my-package' //defaults to name field in package.json
+})
 
 /**
  * console.log(config)
  * {
  *   name: 'Sherlock Holmes',
  *   city: 'Portsmouth',
- *   lastSeen: 'London'  
+ *   lastSeen: 'London'
  * }
  * /
 ```
@@ -45,12 +65,12 @@ Configent supports multiple default configs. These are added to `./configs`.
 /** ./configs/routify2.config.js */
 
 module.exports = {
-    supersedes: ['svelte'],
-    condition: ({ pkgjson }) => pkgjson.dependencies['@roxi/routify'],
-    config: () => ({ 
-        /** the config object used as default */
-        myAppName: 'Routify App' 
-    })
+  supersedes: ['svelte'],
+  condition: ({ pkgjson }) => pkgjson.dependencies['@roxi/routify'],
+  config: () => ({
+    /** the config object used as default */
+    myAppName: 'Routify App',
+  }),
 }
 ```
 
@@ -58,15 +78,15 @@ module.exports = {
 /** ./configs/svelte.config.js */
 
 module.exports = {
-    condition: ({ pkgjson }) => pkgjson.dependencies['svelte'],
-    config: () => ({ 
-        /** the config object used as default */
-        myAppName: 'Svelte App' 
-    })
+  condition: ({ pkgjson }) => pkgjson.dependencies['svelte'],
+  config: () => ({
+    /** the config object used as default */
+    myAppName: 'Svelte App',
+  }),
 }
 ```
 
-The first config with a true condition is used. To avoid conflicts, configs using the  `supersedes` option, will run before their superseded targets.
+The first config with a true condition is used. To avoid conflicts, configs using the `supersedes` option, will run before their superseded targets.
 
 To change the location of default configs, refer to `detectDefaultsConfigPath`.
 
@@ -76,31 +96,30 @@ To change the location of default configs, refer to `detectDefaultsConfigPath`.
 
 ##### Table of Contents
 
--   [configent](#configent)
-    -   [Parameters](#parameters)
+*   [configent](#configent)
+    *   [Parameters](#parameters)
 
 #### configent
 
 ##### Parameters
 
--   `defaults` **options** default options
--   `input` **Partial&lt;options>?** provided input (optional, default `{}`)
--   `configentOptions` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** configent options
-    -   `configentOptions.name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** name to use for configs. If left empty, name from package.json is used (optional, default `''`)
-    -   `configentOptions.cacheConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice with same parameters will return the same instance (optional, default `true`)
-    -   `configentOptions.cacheDetectedDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice from the same module will return the same defaults (optional, default `true`)
-    -   `configentOptions.useDotEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from .env files (optional, default `true`)
-    -   `configentOptions.useEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from process.env (optional, default `true`)
-    -   `configentOptions.usePackageConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from package.json (optional, default `true`)
-    -   `configentOptions.useConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from [name].config.js (optional, default `true`)
-    -   `configentOptions.useDetectDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** detect defaults from context (package.json and file stucture) (optional, default `true`)
-    -   `configentOptions.detectDefaultsConfigPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** detect defaults from context (package.json and file stucture) (optional, default `'configs'`)
-    -   `configentOptions.sanitizeEnvValue` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** sanitize environment values. Convert snake_case to camelCase by default. (optional, default `str=>str.replace(/[-_][a-z]/g,str=>str.substr(1).toUpperCase())`)
-    -   `configentOptions.module` **NodeModule?** required if multiple modules are using configent
+*   `configentOptions` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** configent options
+
+    *   `configentOptions.name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** name to use for configs. If left empty, name from package.json is used (optional, default `''`)
+    *   `configentOptions.cacheConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice with same parameters will return the same instance (optional, default `true`)
+    *   `configentOptions.cacheDetectedDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice from the same module will return the same defaults (optional, default `true`)
+    *   `configentOptions.useDotEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from .env files (optional, default `true`)
+    *   `configentOptions.useEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from process.env (optional, default `true`)
+    *   `configentOptions.usePackageConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from package.json (optional, default `true`)
+    *   `configentOptions.useConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from \[name].config.js (optional, default `true`)
+    *   `configentOptions.useDetectDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** detect defaults from context (package.json and file stucture) (optional, default `true`)
+    *   `configentOptions.detectDefaultsConfigPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** detect defaults from context (package.json and file stucture) (optional, default `'configs'`)
+    *   `configentOptions.sanitizeEnvValue` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** sanitize environment values. Convert snake_case to camelCase by default. (optional, default `str=>str.replace(/[-_][a-z]/g,str=>str.substr(1).toUpperCase())`)
+    *   `configentOptions.module` **NodeModule?** required if multiple modules are using configent
 
 Returns **options** 
 
-#### 
+####
 
 
 ---

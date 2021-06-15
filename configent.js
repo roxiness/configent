@@ -18,8 +18,6 @@ const _defaults = {
 
 /**
  * @template {Object.<string, any>} options
- * @param {options} defaults default options 
- * @param {Partial<options>=} input provided input
  * @param {object} [configentOptions] configent options
  * @param {string=} [configentOptions.name = ''] name to use for configs. If left empty, name from package.json is used
  * @param {boolean=} [configentOptions.cacheConfig = true] calling configent twice with same parameters will return the same instance
