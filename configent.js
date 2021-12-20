@@ -18,28 +18,29 @@ const _defaults = {
 
 /**
  * @template {Object.<string, any>} options
- * @param {options} defaults default options 
  * @param {Partial<options>=} input provided input
- * @param {object} [configentOptions] configent options
- * @param {string=} [configentOptions.name = ''] name to use for configs. If left empty, name from package.json is used
- * @param {boolean=} [configentOptions.cacheConfig = true] calling configent twice with same parameters will return the same instance
- * @param {boolean=} [configentOptions.cacheDetectedDefaults = true] calling configent twice from the same module will return the same defaults
- * @param {boolean=} [configentOptions.useDotEnv = true] include config from .env files
- * @param {boolean=} [configentOptions.useEnv = true] include config from process.env
- * @param {boolean=} [configentOptions.usePackageConfig = true] include config from package.json
- * @param {boolean=} [configentOptions.useConfig = true] include config from [name].config.js
- * @param {boolean=} [configentOptions.useDetectDefaults = true] detect defaults from context (package.json and file stucture)
- * @param {string=} [configentOptions.detectDefaultsConfigPath = 'configs'] detect defaults from context (package.json and file stucture)
- * @param {function=} [configentOptions.sanitizeEnvValue = str => str.replace(/[-_][a-z]/g, str => str.substr(1).toUpperCase())] sanitize environment values. Convert snake_case to camelCase by default. 
- * @param {NodeModule} [configentOptions.module] required if multiple modules are using configent
+ * @param {object} [options] configent options
+ * @param {{}=} [options.defaults = {}] defaults. Used for type casting env variables
+ * @param {string=} [options.name = ''] name to use for configs. If left empty, name from package.json is used
+ * @param {boolean=} [options.cacheConfig = true] calling configent twice with same parameters will return the same instance
+ * @param {boolean=} [options.cacheDetectedDefaults = true] calling configent twice from the same module will return the same defaults
+ * @param {boolean=} [options.useDotEnv = true] include config from .env files
+ * @param {boolean=} [options.useEnv = true] include config from process.env
+ * @param {boolean=} [options.usePackageConfig = true] include config from package.json
+ * @param {boolean=} [options.useConfig = true] include config from [name].config.js
+ * @param {boolean=} [options.useDetectDefaults = true] detect defaults from context (package.json and file stucture)
+ * @param {string=} [options.detectDefaultsConfigPath = 'configs'] detect defaults from context (package.json and file stucture)
+ * @param {function=} [options.sanitizeEnvValue = str => str.replace(/[-_][a-z]/g, str => str.substr(1).toUpperCase())] sanitize environment values. Convert snake_case to camelCase by default. 
+ * @param {NodeModule} [options.module] required if multiple modules are using configent
  * @returns {options}
  */
-function configent(defaults, input = {}, configentOptions) {
-    configentOptions = { ..._defaults, ...configentOptions }
-    const getParentModuleDir = createGetParentModuleDir(configentOptions)
-    configentOptions.name = configentOptions.name || require(resolve(getParentModuleDir(), 'package.json')).name
+function configent(options) {
+    options = { ..._defaults, ...options }
+    const getParentModuleDir = createGetParentModuleDir(options)
+    options.name = options.name || require(resolve(getParentModuleDir(), 'package.json')).name
 
     const {
+        defaults,
         name,
         cacheConfig,
         cacheDetectedDefaults,
@@ -50,14 +51,14 @@ function configent(defaults, input = {}, configentOptions) {
         usePackageConfig,
         useDetectDefaults,
         detectDefaultsConfigPath
-    } = configentOptions
+    } = options
     const upperCaseRE = new RegExp(`^${name.toUpperCase()}_`)
 
     return buildConfig()
 
     function buildConfig() {
-        delete (configentOptions.module)
-        const hash = JSON.stringify({ name, defaults, input, configentOptions })
+        delete (options.module)
+        const hash = JSON.stringify({ name, defaults, options })
         if (!instances[hash] || !cacheConfig) {
             instances[hash] = {
                 ...defaults,
@@ -65,7 +66,6 @@ function configent(defaults, input = {}, configentOptions) {
                 ...usePackageConfig && getPackageConfig(),
                 ...useConfig && getUserConfig(),
                 ...useEnv && getEnvConfig(),
-                ...input
             }
         }
         return instances[hash]
