@@ -19,7 +19,7 @@
   "author": "jakobrosenberg@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^16.0.0"
   },
   "devDependencies": {
     "ava": "^3.13.0",
