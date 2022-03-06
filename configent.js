@@ -1,4 +1,4 @@
-const { existsSync, readdirSync } = require('fs')
+const { existsSync, readdirSync, readFileSync } = require('fs')
 const { resolve, dirname } = require('path')
 let instances = {}
 let detectedFromDefaults = {}
@@ -72,8 +72,21 @@ function configent(defaults, input = {}, configentOptions) {
     }
 
     function getEnvConfig() {
-        useDotEnv && require('dotenv').config()
-        const entries = Object.entries(process.env)
+        let env = process.env
+        if (useDotEnv) {
+            try {
+                const envPath = resolve(process.cwd(), '.env')
+                const envContents = readFileSync(envPath, 'utf8')
+                env = {
+                    ...require('dotenv').parse(envContents),
+                    ...env
+                }
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        const entries = Object.entries(env)
             .filter(([key]) => key.match(upperCaseRE))
             .map(parseField)
 
