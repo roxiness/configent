@@ -103,8 +103,16 @@ function configent(defaults, input = {}, configentOptions) {
     }
 
     function getUserConfig() {
-        const path = resolve(process.cwd(), `${name}.config.js`)
-        return existsSync(path) ? require(path) : {}
+        const path_js = resolve(process.cwd(), `${name}.config.js`)
+        const path_cjs = resolve(process.cwd(), `${name}.config.cjs`)
+
+        if (existsSync(path_js)) {
+            return require(path_js);
+        } else if (existsSync(path_cjs)) {
+            return require(path_cjs);
+        } else {
+            return {};
+        }
     }
 
     function getPackageConfig() {
