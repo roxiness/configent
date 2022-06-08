@@ -100,7 +100,7 @@ function configent(options) {
     }
 
     function getDetectDefaults() {
-        const hash = JSON.stringify({ name, path: module['parent'].path })
+        const hash = JSON.stringify({ name, path: module['parent']?.path || process.cwd() })
 
         // we only want to detect the defaults for any given module once
         if (!detectedFromDefaults[hash] || !cacheDetectedDefaults) {
