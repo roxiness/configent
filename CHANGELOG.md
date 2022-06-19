@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-4](https://github.com/roxiness/configent/compare/v3.0.0-3...v3.0.0-4) (2022-06-19)
+
+
+### Bug Fixes
+
+* types ([253fb4c](https://github.com/roxiness/configent/commit/253fb4caa6731e669d84082d3d3d6e93ee134f9d))
+
 ## [3.0.0-3](https://github.com/roxiness/configent/compare/v2.2.0...v3.0.0-3) (2022-06-08)
 
 
