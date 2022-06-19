@@ -17,8 +17,6 @@ const _defaults = {
 }
 
 /**
- * @template {Object.<string, any>} options
- * @param {Partial<options>=} input provided input
  * @param {object} [options] configent options
  * @param {{}=} [options.defaults = {}] defaults. Used for type casting env variables
  * @param {string=} [options.name = ''] name to use for configs. If left empty, name from package.json is used
@@ -32,7 +30,6 @@ const _defaults = {
  * @param {string=} [options.detectDefaultsConfigPath = 'configs'] detect defaults from context (package.json and file stucture)
  * @param {function=} [options.sanitizeEnvValue = str => str.replace(/[-_][a-z]/g, str => str.substr(1).toUpperCase())] sanitize environment values. Convert snake_case to camelCase by default. 
  * @param {NodeModule} [options.module] required if multiple modules are using configent
- * @returns {options}
  */
 function configent(options) {
     options = { ..._defaults, ...options }

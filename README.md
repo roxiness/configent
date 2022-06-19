@@ -8,12 +8,12 @@
 
 No fuzz config compilation from (ordered by ascending precedence)
 
--   defaults
--   package.json
--   [name].config.js
--   .env
--   environment
--   input
+*   defaults
+*   package.json
+*   \[name].config.js
+*   .env
+*   environment
+*   input
 
 ```javascript
 /** 
@@ -76,31 +76,29 @@ To change the location of default configs, refer to `detectDefaultsConfigPath`.
 
 ##### Table of Contents
 
--   [configent](#configent)
-    -   [Parameters](#parameters)
+*   [configent](#configent)
+    *   [Parameters](#parameters)
 
 #### configent
 
 ##### Parameters
 
--   `defaults` **options** default options
--   `input` **Partial&lt;options>?** provided input (optional, default `{}`)
--   `configentOptions` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** configent options
-    -   `configentOptions.name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** name to use for configs. If left empty, name from package.json is used (optional, default `''`)
-    -   `configentOptions.cacheConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice with same parameters will return the same instance (optional, default `true`)
-    -   `configentOptions.cacheDetectedDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice from the same module will return the same defaults (optional, default `true`)
-    -   `configentOptions.useDotEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from .env files (optional, default `true`)
-    -   `configentOptions.useEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from process.env (optional, default `true`)
-    -   `configentOptions.usePackageConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from package.json (optional, default `true`)
-    -   `configentOptions.useConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from [name].config.js (optional, default `true`)
-    -   `configentOptions.useDetectDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** detect defaults from context (package.json and file stucture) (optional, default `true`)
-    -   `configentOptions.detectDefaultsConfigPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** detect defaults from context (package.json and file stucture) (optional, default `'configs'`)
-    -   `configentOptions.sanitizeEnvValue` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** sanitize environment values. Convert snake_case to camelCase by default. (optional, default `str=>str.replace(/[-_][a-z]/g,str=>str.substr(1).toUpperCase())`)
-    -   `configentOptions.module` **NodeModule?** required if multiple modules are using configent
+*   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** configent options
 
-Returns **options** 
+    *   `options.defaults` **{}** defaults. Used for type casting env variables (optional, default `{}`)
+    *   `options.name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** name to use for configs. If left empty, name from package.json is used (optional, default `''`)
+    *   `options.cacheConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice with same parameters will return the same instance (optional, default `true`)
+    *   `options.cacheDetectedDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** calling configent twice from the same module will return the same defaults (optional, default `true`)
+    *   `options.useDotEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from .env files (optional, default `true`)
+    *   `options.useEnv` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from process.env (optional, default `true`)
+    *   `options.usePackageConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from package.json (optional, default `true`)
+    *   `options.useConfig` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** include config from \[name].config.js (optional, default `true`)
+    *   `options.useDetectDefaults` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** detect defaults from context (package.json and file stucture) (optional, default `true`)
+    *   `options.detectDefaultsConfigPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** detect defaults from context (package.json and file stucture) (optional, default `'configs'`)
+    *   `options.sanitizeEnvValue` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** sanitize environment values. Convert snake_case to camelCase by default. (optional, default `str=>str.replace(/[-_][a-z]/g,str=>str.substr(1).toUpperCase())`)
+    *   `options.module` **NodeModule?** required if multiple modules are using configent
 
-#### 
+####
 
 
 ---
