@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-7](https://github.com/roxiness/configent/compare/v3.0.0-6...v3.0.0-7) (2022-07-26)
+
+
+### Bug Fixes
+
+* wrong main path in package.json ([3d7c8f2](https://github.com/roxiness/configent/commit/3d7c8f28f43a1eea925f997bd06df3ebb789070f))
+
 ## [3.0.0-6](https://github.com/roxiness/configent/compare/v3.0.0-4...v3.0.0-6) (2022-07-26)
 
 
