@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/roxiness/configent.git"
   },
-  "main": "configent.js",
+  "main": "lib/configent.js",
   "scripts": {
     "build": "tsc && documentation readme configent.js -f md -s API && node ./postBuild",
     "test": "probs test"
