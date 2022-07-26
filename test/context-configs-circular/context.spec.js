@@ -1,23 +1,26 @@
-const test = require('ava').default
-const { configent } = require('../..')
-process.chdir(__dirname) //change cwd to __dirname
+/** @type import('../../lib/configent')['configent'] */
+let configent;
 
-const defaults = { fromContext: false }
+beforeAll(async () => {
+  configent = await import("../../lib/configent.js").then((r) => r.configent);
+});
+
 const configentOptions = {
-    useDetectDefaults: true,
-    cacheConfig: false
-}
+  useDetectDefaults: true,
+  cacheConfig: false,
+  consumerDir: __dirname,
+  clientDir: __dirname,
+};
 
-test('circular tests create error', async t => {
+test("circular tests create error", async (t) => {
+  let error;
+  await configent(configentOptions).catch((err) => (error = err));
 
-    const res = await t.try(() => {
-        configent(defaults, {}, configentOptions)
-    })
-    res.discard()
 
-    t.is(res.errors[0].savedError.message,
-        `Looks like you have circular supersedings ` +
-        `\ncircular1.config.js supersedes circular2` +
-        `\ncircular2.config.js supersedes circular1`
-    )
-})
+  assert.equal(
+    error.message,
+    `Looks like you have circular supersedings ` +
+      `\ncircular1.config.js supersedes circular2` +
+      `\ncircular2.config.js supersedes circular1`
+  );
+});

@@ -1,39 +1,44 @@
-const test = require('ava').default
-const { configent } = require('../..')
-process.chdir(__dirname) //change cwd to __dirname
+/** @type import('../../lib/configent')['configent'] */
+let configent;
 
-const defaults = { fromContext: false }
+beforeAll(async () => {
+  configent = await import("../../lib/configent.js").then((r) => r.configent);
+});
+
+const defaults = { fromContext: false };
 const configentOptions = {
-    useDetectDefaults: true,
-    cacheConfig: false,
-    cacheDetectedDefaults: false
-}
+  useDetectDefaults: true,
+  cacheConfig: false,
+  cacheDetectedDefaults: false,
+  consumerDir: __dirname,
+  clientDir: __dirname,
+};
 
-test('if no context is found, defaults are unchanged', async t => {
-    const result = configent(defaults, {}, configentOptions)
-    t.deepEqual(result, { fromContext: false })
-})
+test("if no context is found, defaults are unchanged", async () => {
+  const result = await configent(configentOptions);
+  assert.deepEqual(result, { });
+});
 
-test('if context is found, it sets defaults', async t => {
-    process.env.USE_BASIC = "1"
-    const result = configent(defaults, {}, configentOptions)
-    t.deepEqual(result, { fromContext: 'basic' })
-})
+test("if context is found, it sets defaults", async () => {
+  process.env.USE_BASIC = "1";
+  const result = await configent(configentOptions);
+  assert.deepEqual(result, { fromContext: "basic" });
+});
 
-test('if multiple contexts are found, superseder wins', async t => {
-    process.env.USE_SUPERSEDER = "1"
-    const result = configent(defaults, {}, configentOptions)
-    t.deepEqual(result, { fromContext: 'superseder' })
-})
+test("if multiple contexts are found, superseder wins", async () => {
+  process.env.USE_SUPERSEDER = "1";
+  const result = await configent(configentOptions);
+  assert.deepEqual(result, { fromContext: "superseder" });
+});
 
-test('can read package.json from cwd', async t => {
-    process.env.USE_PKGJSON = "1"
-    const result = configent(defaults, {}, configentOptions)
-    t.deepEqual(result, { fromContext: 'usepkgjson' })
-})
+test("can read package.json from cwd", async () => {
+  process.env.USE_PKGJSON = "1";
+  const result = await configent(configentOptions);
+  assert.deepEqual(result, { fromContext: "usepkgjson" });
+});
 
-test('circular tests create error', async t => {
-    process.env.USE_CIRCULAR = "1"
-    const result = configent(defaults, {}, configentOptions)
-    t.deepEqual(result, { fromContext: 'usepkgjson' })
-})
+// test("circular tests create error", async () => {
+//   process.env.USE_CIRCULAR = "1";
+//   const result = await configent(configentOptions);
+//   assert.deepEqual(result, { fromContext: "usepkgjson" });
+// });
