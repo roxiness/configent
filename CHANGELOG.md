@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-9](https://github.com/roxiness/configent/compare/v3.0.0-8...v3.0.0-9) (2022-07-26)
+
+
+### Bug Fixes
+
+* autodetect defaults didn't work ([448ed8d](https://github.com/roxiness/configent/commit/448ed8de423d47dbff1a4cd538eb388aa9827d78))
+
 ## [3.0.0-8](https://github.com/roxiness/configent/compare/v3.0.0-7...v3.0.0-8) (2022-07-26)
 
 
