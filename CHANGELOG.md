@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-8](https://github.com/roxiness/configent/compare/v3.0.0-7...v3.0.0-8) (2022-07-26)
+
+
+### Bug Fixes
+
+* didn't detect correct consumer dir ([2fe2ee4](https://github.com/roxiness/configent/commit/2fe2ee40909f0a07b7c1857effaca4dad975217c))
+* dir detection ([4b9312e](https://github.com/roxiness/configent/commit/4b9312ee82055d87b7a21a8e513477d3e4068892))
+* project configs should only be *.[mct]?js ([73c3ddf](https://github.com/roxiness/configent/commit/73c3ddff7b3c847a204fa6a9eb88badfa1278165))
+
 ## [3.0.0-7](https://github.com/roxiness/configent/compare/v3.0.0-6...v3.0.0-7) (2022-07-26)
 
 
