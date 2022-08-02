@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-10](https://github.com/roxiness/configent/compare/v3.0.0-9...v3.0.0-10) (2022-08-02)
+
+
+### Bug Fixes
+
+* get rid of async ([fae5d12](https://github.com/roxiness/configent/commit/fae5d1241b8e35c9908291c512d067157058b191))
+
 ## [3.0.0-9](https://github.com/roxiness/configent/compare/v3.0.0-8...v3.0.0-9) (2022-07-26)
 
 
