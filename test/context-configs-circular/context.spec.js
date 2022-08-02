@@ -14,8 +14,11 @@ const configentOptions = {
 
 test("circular tests create error", async (t) => {
   let error;
-  await configent(configentOptions).catch((err) => (error = err));
-
+  try {
+    configent(configentOptions);
+  } catch (err) {
+    error = err;
+  }
 
   assert.equal(
     error.message,
