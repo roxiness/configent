@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-11](https://github.com/roxiness/configent/compare/v3.0.0-10...v3.0.0-11) (2022-08-04)
+
+
+### Bug Fixes
+
+* should not set NODE_ENV ([a269f50](https://github.com/roxiness/configent/commit/a269f507bd7805be79df6902db96bcfad68cda56))
+
 ## [3.0.0-10](https://github.com/roxiness/configent/compare/v3.0.0-9...v3.0.0-10) (2022-08-02)
 
 
