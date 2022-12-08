@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-12](https://github.com/roxiness/configent/compare/v3.0.0-11...v3.0.0-12) (2022-12-08)
+
+
+### Bug Fixes
+
+* support import.meta.url as consumerDir ([a6cf334](https://github.com/roxiness/configent/commit/a6cf334bab7b38a54b843d480d3f651b3d17e189))
+* types ([3a00611](https://github.com/roxiness/configent/commit/3a00611289fa5a6921fdf42e2ad32429c15e9df2))
+* unwanted silent template log ([b820529](https://github.com/roxiness/configent/commit/b820529b7997c98b049bcff0e28839953cbfc39f))
+
 ## [3.0.0-11](https://github.com/roxiness/configent/compare/v3.0.0-10...v3.0.0-11) (2022-08-04)
 
 
