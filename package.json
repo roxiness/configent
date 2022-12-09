@@ -20,7 +20,8 @@
   "author": "jakobrosenberg@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "esm": "^3.2.25"
   },
   "devDependencies": {
     "documentation": "^13.1.0",
