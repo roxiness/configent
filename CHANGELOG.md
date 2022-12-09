@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-14](https://github.com/roxiness/configent/compare/v3.0.0-13...v3.0.0-14) (2022-12-09)
+
+
+### Bug Fixes
+
+* improve auto import of ([b3a8964](https://github.com/roxiness/configent/commit/b3a8964cff349e1591f6dd12d5d288872c9fa7b3))
+
 ## [3.0.0-13](https://github.com/roxiness/configent/compare/v3.0.0-12...v3.0.0-13) (2022-12-08)
 
 
