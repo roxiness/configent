@@ -4,6 +4,9 @@ declare module "util" {
     export function getConsumerDir(offset: number): string;
     export function getPackageJson(path: string): any;
 }
+declare module "getter" {
+    export function require(path: any): any;
+}
 declare module "configent" {
     /**
      * @typedef {Object} ConfigentOptions
