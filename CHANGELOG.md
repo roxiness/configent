@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/roxiness/configent/compare/v3.0.0-14...v3.0.0) (2025-07-23)
+
+
+### Bug Fixes
+
+* better esm support ([ff66315](https://github.com/roxiness/configent/commit/ff663157a68ecfd5ff8599cd0a2c3ca037d2d7d0))
+
 ## [3.0.0-14](https://github.com/roxiness/configent/compare/v3.0.0-13...v3.0.0-14) (2022-12-09)
 
 

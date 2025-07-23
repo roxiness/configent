@@ -1,6 +1,6 @@
 {
   "name": "configent",
-  "version": "3.0.0-15",
+  "version": "3.0.0",
   "description": "Confident configurations",
   "type": "module",
   "repository": {
